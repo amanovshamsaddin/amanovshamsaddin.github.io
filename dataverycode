@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Shamsaddin Amanov - Data Scientist, Philosopher, and System Architect. Documenting academic research at Monash University and philosophical frameworks.">
+  <meta name="author" content="Shamsaddin Amanov">
+  <meta name="theme-color" content="#0f172a">
+  
+  <title>Shamsaddin Amanov | Data Architecture & Philosophy</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" media="print" onload="this.media='all'">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Shamsaddin Amanov",
+    "jobTitle": "Data Scientist & Author",
+    "affiliation": [
+      { "@type": "Organization", "name": "Monash University" },
+      { "@type": "Organization", "name": "ExxonMobil" }
+    ],
+    "url": "https://datavery.app",
+    "sameAs": [
+      "https://www.linkedin.com/company/datavery/",
+      "https://github.com/amanovshamsaddin"
+    ]
+  }
+  </script>
+
+  <style>
+    /* --- 1. CORE VARIABLES & THEMING --- */
+    :root {
+      /* Base Colors */
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent-data: #0ea5e9; /* Technical cyan accent */
+      
+      /* Light Theme Surface */
+      --bg-color: #f8fafc;
+      --surface-color: #ffffff;
+      --surface-hover: #f1f5f9;
+      
+      /* Light Theme Text */
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --grid-color: rgba(100, 116, 139, 0.05);
+      
+      /* Skeleton Loaders */
+      --skeleton-base: #e2e8f0;
+      --skeleton-shine: #f8fafc;
+      
+      /* Geometry & Physics */
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --transition-standard: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] {
+      /* Dark Theme Surface */
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --accent-data: #22d3ee;
+      --bg-color: #0b1120;
+      --surface-color: #151e32;
+      --surface-hover: #1e293b;
+      
+      /* Dark Theme Text */
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --grid-color: rgba(148, 163, 184, 0.03);
+      
+      /* Skeleton Loaders */
+      --skeleton-base: #1e293b;
+      --skeleton-shine: #334155;
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    /* --- 2. GLOBAL RESET & TYPOGRAPHY --- */
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      transition: background-color var(--transition-standard), color var(--transition-standard);
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      /* Technical Subtle Grid Background */
+      background-image: 
+        linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Merriweather', serif;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      margin-top: 0;
+    }
+
+    /* Monospace Utility for Technical Elements */
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    a:hover {
+      color: var(--accent-data);
+    }
+
+    /* Accessibility Focus */
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--accent-data);
+      outline-offset: 2px;
+    }
+
+    /* --- 3. LAYOUT UTILITIES --- */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    section {
+      padding: 8rem 0;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    /* --- 4. NAVIGATION SYSTEM --- */
+    nav.top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(var(--bg-color-rgb), 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 0;
+    }
+
+    nav.top-nav .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav.top-nav ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      list-style: none;
+    }
+
+    nav.top-nav li {
+      margin-left: 2rem;
+    }
+
+    nav.top-nav a {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    nav.top-nav a:hover {
+      color: var(--primary);
+    }
+    
+    .logo-link {
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.05em;
+    }
+
+    .logo-link span {
+      color: var(--accent-data);
+    }
+
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    #theme-toggle:hover {
+      background: var(--surface-color);
+      border-color: var(--primary);
+    }
+
+    #theme-toggle svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* --- 5. HERO SECTION (TECHNICAL TONE) --- */
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 6rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 1rem;
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-data);
+      border-radius: 50%;
+      animation: pulse-tech 2s infinite;
+    }
+
+    @keyframes pulse-tech {
+      0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); }
+      70% { box-shadow: 0 0 0 6px rgba(34, 211, 238, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+      max-width: 900px;
+    }
+
+    .hero h1 strong {
+      font-weight: 700;
+    }
+
+    .hero p.lead {
+      font-size: clamp(1.1rem, 2vw, 1.2rem);
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      max-width: 700px;
+      line-height: 1.8;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #fff;
+      border: 1px solid var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    /* --- 6. SECTION INDEXING (DATA ARCHITECTURE) --- */
+    .section-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent-data);
+      margin-bottom: 1.5rem;
+      display: block;
+      letter-spacing: 0.1em;
+    }
+
+    .section-header h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      max-width: 600px;
+      font-size: 1.05rem;
+    }
+
+    /* --- 7. TIMELINE & BACKGROUND (RESUME LOG) --- */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 1px solid var(--border-color);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.35rem;
+      top: 0.2rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-color);
+      border: 2px solid var(--primary);
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .timeline-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text-main);
+    }
+
+    .timeline-org {
+      font-family: 'Merriweather', serif;
+      font-style: italic;
+      color: var(--accent-data);
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Skills List */
+    .tech-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+    }
+
+    /* --- 8. INFRASTRUCTURE & SKELETONS --- */
+    .infra-card {
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      transition: var(--transition-standard);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .infra-card:hover {
+      border-color: var(--accent-data);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Skeleton CSS Animation */
+    .skeleton-box {
+      background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
+      background-size: 200% 100%;
+      animation: skelLoading 2s infinite linear;
+      border-radius: var(--radius-sm);
+    }
+    @keyframes skelLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    .skel-visual { height: 140px; width: 100%; margin-bottom: 1.5rem; }
+    
+    .meta-row {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta-row span:last-child {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .infra-title {
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    /* --- 9. TECHNICAL CODE PREVIEW --- */
+    .code-wrapper {
+      background: #0d1117; /* GitHub Dark Dimmed feel */
+      border: 1px solid #30363d;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-top: 3rem;
+    }
+
+    .code-header {
+      background: #161b22;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-filename {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #8b949e;
+    }
+
+    .code-body {
+      padding: 1.5rem;
+      margin: 0;
+      overflow-x: auto;
+    }
+
+    .code-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+    }
+    
+    /* Syntax Highlight Colors */
+    .syn-keyword { color: #ff7b72; }
+    .syn-func { color: #d2a8ff; }
+    .syn-string { color: #a5d6ff; }
+    .syn-comment { color: #8b949e; font-style: italic; }
+
+    /* --- 10. PHILOSOPHY & MEDIA CARDS --- */
+    .media-card {
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2.5rem;
+      transition: var(--transition-standard);
+    }
+    
+    .media-card:hover {
+      background: var(--surface-hover);
+    }
+
+    .media-icon {
+      width: 32px;
+      height: 32px;
+      fill: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .media-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .media-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .stats-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main); font-size: 1rem; }
+    .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* --- 11. CONTACT & FOOTER --- */
+    input, textarea {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent-data);
+      background: var(--bg-color);
+    }
+    
+    label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 4rem 0 2rem;
+      border-top: 1px solid var(--border-color);
+      background: var(--surface-color);
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+
+    .social-links a:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .social-links svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .version-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1.5rem;
+    }
+
+    /* --- 12. UTILITIES & ANIMATIONS --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      nav.top-nav li { margin-left: 1rem; }
+      .hidden-mobile { display: none; }
+      .hero { padding-top: 4rem; text-align: left; }
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <div class="container nav-wrapper">
+      <a href="#home" class="logo-link" aria-label="Return to index">
+        Datavery<span>.app</span>
+      </a>
+      <ul>
+        <li class="hidden-mobile"><a href="#log">Log</a></li>
+        <li class="hidden-mobile"><a href="#infrastructure">Infrastructure</a></li>
+        <li class="hidden-mobile"><a href="#philosophy">Philosophy</a></li>
+        <li>
+          <button id="theme-toggle" aria-label="Toggle System Theme">
+            <svg id="theme-icon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero container reveal" id="home">
+      <div class="status-badge mono">
+        <div class="status-dot"></div>
+        SYSTEM.STATUS: INITIALIZED
+      </div>
+      
+      <h1>
+        Building Predictive Systems from <br>
+        <strong>First Principles.</strong>
+      </h1>
+      
+      <p class="lead">
+        I am Shamsaddin Amanov. Master of Data Science candidate at Monash University, author of Omittoism, and former corporate analyst. Bridging the gap between strict statistical architecture and deep philosophical inquiry.
+      </p>
+      
+      <div class="btn-group">
+        <a href="#infrastructure" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          View Architecture
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          Initialize Contact
+        </a>
+      </div>
+    </section>
+
+    <section id="log" class="container reveal">
+      <span class="section-index">01 — BACKGROUND LOG</span>
+      <div class="section-header">
+        <h2>Professional & Academic Trajectory</h2>
+        <p>A systematic record of formal education and corporate deployments.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="timeline-date mono">FEB 2026 — PRESENT</span>
+            <div class="timeline-title">Master of Data Science</div>
+            <div class="timeline-org">Monash University | Melbourne, Australia</div>
+            <p class="timeline-desc">Currently enrolled at the Clayton School of Information Technology. Transitioning into advanced analytics, machine learning pipelines, and predictive architecture.</p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date mono">JUL 2024 — JUL 2025</span>
+            <div class="timeline-title">Military Service</div>
+            <div class="timeline-org">Internal Troops of Azerbaijani Army | Azerbaijan</div>
+            <p class="timeline-desc">Completed a one-year compulsory deployment, fulfilling civic duty with a focus on operational discipline.</p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date mono">SEP 2022 — JUN 2024</span>
+            <div class="timeline-title">Joint Interest Accounting Analyst</div>
+            <div class="timeline-org">ExxonMobil | Budapest, Hungary</div>
+            <p class="timeline-desc">Managed complex corporate financial operations and operations management analysis. (Note: Concurrently admitted to Master in Marketing at Corvinus University, voluntarily withdrawn to focus on analytical career pivot).</p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date mono">SEP 2018 — FEB 2022</span>
+            <div class="timeline-title">BSc Business Administration & Management</div>
+            <div class="timeline-org">University of Szeged | Hungary</div>
+            <p class="timeline-desc">Thesis: <em>"The Right to Exist: The Position of Universal Basic Income in the Works of the Most Influential Contemporary Philosophers."</em> Evaluated economic theory via Marx, Rawls, and Foucault.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem;">Linguistic & Cultural Stack</h3>
+          <p style="color: var(--text-muted); margin-bottom: 2rem;">Multilingual communication frameworks supporting global academic and professional operations.</p>
+          
+          <div class="meta-row"><span>AZERI / TURKISH</span><span>NATIVE (L1)</span></div>
+          <div class="meta-row"><span>ENGLISH</span><span>IELTS 7.5 (C1)</span></div>
+          <div class="meta-row"><span>GERMAN</span><span>B1</span></div>
+          <div class="meta-row"><span>NORWEGIAN</span><span>A2</span></div>
+          <div class="meta-row"><span>SPANISH</span><span>A2</span></div>
+
+          <h3 style="font-size: 1.2rem; margin-top: 3rem; margin-bottom: 1rem;">Early Foundation</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Graduated from the Bilasuvar School-Lyceum Complex in 2016, achieving 80% (545/700) in central examinations. Subsequently completed two years of a Public Policy program at Qafqaz University before relocating to Europe.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="infrastructure" class="container reveal">
+      <span class="section-index">02 — SYSTEM INFRASTRUCTURE</span>
+      <div class="section-header">
+        <h2>Monash Repository Allocations</h2>
+        <p>These repositories are initialized and awaiting datasets from the upcoming Monash Data Science curriculum. No fabricated history; pure architectural readiness.</p>
+      </div>
+
+      <div class="grid-3">
+        <article class="infra-card">
+          <div class="skeleton-box skel-visual"></div>
+          <div class="meta-row"><span>STATUS</span><span>PROVISIONED</span></div>
+          <div class="meta-row"><span>STACK</span><span>PYTHON / PANDAS</span></div>
+          <h3 class="infra-title">Statistical Data Exploration</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); flex-grow: 1;">Allocated for initial descriptive statistics, data wrangling, and exploratory data analysis (EDA) coursework.</p>
+        </article>
+
+        <article class="infra-card">
+          <div class="skeleton-box skel-visual"></div>
+          <div class="meta-row"><span>STATUS</span><span>AWAITING SCHEMA</span></div>
+          <div class="meta-row"><span>STACK</span><span>SQL / POSTGRES</span></div>
+          <h3 class="infra-title">Relational Database Design</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); flex-grow: 1;">Reserved for complex querying, database normalization, and relational architecture projects.</p>
+        </article>
+
+        <article class="infra-card">
+          <div class="skeleton-box skel-visual"></div>
+          <div class="meta-row"><span>STATUS</span><span>CONCEPT PHASE</span></div>
+          <div class="meta-row"><span>STACK</span><span>SCIKIT-LEARN</span></div>
+          <h3 class="infra-title">Predictive Modeling</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); flex-grow: 1;">Infrastructure ready for training, testing, and deploying foundational machine learning algorithms.</p>
+        </article>
+      </div>
+
+      <div class="code-wrapper reveal">
+        <div class="code-header">
+          <span class="code-filename">portfolio_initialization.py</span>
+          <span class="code-filename">UTF-8</span>
+        </div>
+        <pre class="code-body"><code><span class="syn-comment"># Initializing the Master of Data Science environment at Monash (2026)</span>
+<span class="syn-keyword">import</span> numpy <span class="syn-keyword">as</span> np
+<span class="syn-keyword">import</span> pandas <span class="syn-keyword">as</span> pd
+<span class="syn-keyword">from</span> sklearn.pipeline <span class="syn-keyword">import</span> Pipeline
+<span class="syn-keyword">from</span> sklearn.preprocessing <span class="syn-keyword">import</span> StandardScaler
+
+<span class="syn-keyword">def</span> <span class="syn-func">architect_system</span>(integrity_check: bool = <span class="syn-keyword">True</span>) -> str:
+    <span class="syn-string">"""
+    Sets up the foundational logic for the coming years of study.
+    Ensures no fabricated data is pushed to production.
+    """</span>
+    <span class="syn-keyword">if</span> integrity_check:
+        <span class="syn-keyword">return</span> <span class="syn-string">"System ready. Awaiting academic input."</span>
+        
+<span class="syn-keyword">if</span> __name__ == <span class="syn-string">"__main__"</span>:
+    status = architect_system()
+    <span class="syn-func">print</span>(f<span class="syn-string">"Day 1 Log: {status}"</span>)</code></pre>
+      </div>
+    </section>
+
+    <section id="philosophy" class="container reveal">
+      <span class="section-index">03 — PHILOSOPHY & METRICS</span>
+      <div class="section-header">
+        <h2>The Multidisciplinary Engine</h2>
+        <p>Data science provides the 'how'. Philosophy and tactical logic provide the 'why'.</p>
+      </div>
+
+      <div class="grid-2">
+        
+        <article class="media-card">
+          <svg class="media-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+          <h3>Omittoism & The Manifesto</h3>
+          <p>I am the architect of <strong>Omittoism</strong>, a worldview conceptualized in 2020 and codified in 2026. The framework addresses "Philosophical Orphans"—those who find both traditional religious dogma and conventional atheism insufficient. The Manifesto outlines "Jurisdictional Sovereignty," offering a consent-based critique of absolute authority.</p>
+        </article>
+
+        <article class="media-card">
+          <svg class="media-icon" viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+          <h3>Var Olma Lüksü (V.O.L.)</h3>
+          <p>Host and showrunner of "The Luxury of Being," a Turkish-language podcast blending analytical logic with existential and political inquiry. It serves as an active audio laboratory for testing complex hypotheses.</p>
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="stat-val">11,000+</span>
+              <span class="stat-label">Spotify Followers</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="media-card">
+          <svg class="media-icon" viewBox="0 0 24 24"><path d="M19.99 22V19.49C19.99 18.06 19 16.82 17.63 16.48L13 15.32V13.8L15.34 11.45C15.76 11.03 16 10.46 16 9.87V7.5C16 6.67 15.33 6 14.5 6H13V3H11V6H9.5C8.67 6 8 6.67 8 7.5V9.87C8 10.46 8.24 11.03 8.66 11.45L11 13.8V15.32L6.37 16.48C5 16.82 4.01 18.06 4.01 19.49V22H19.99Z"/></svg>
+          <h3>Tactical Execution</h3>
+          <p>Competitive chess acts as a direct parallel to algorithmic optimization: managing complex variables under extreme time pressure.</p>
+          <div class="stats-row" style="gap: 2rem;">
+            <div class="stat-item">
+              <span class="stat-val">2230+</span>
+              <span class="stat-label">Lichess Bullet</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">13454528</span>
+              <span class="stat-label">FIDE ID</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="media-card">
+          <svg class="media-icon" viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
+          <h3>Cinematic Analysis</h3>
+          <p>Analyzing systemic structures and human conditions through global cinema. Critical viewing sharpens pattern recognition.</p>
+          <div class="meta-row" style="margin-top: 1.5rem; border-bottom: none; flex-direction: column; gap: 0.5rem;">
+            <span style="font-weight: 700; color: var(--text-main);">REFERENCE MATRIX:</span>
+            <span>Aftersun (2022)</span>
+            <span>Rosetta (1999)</span>
+            <span>The Seventh Seal (1957)</span>
+            <span>V for Vendetta (2005)</span>
+            <span>2001: A Space Odyssey (1968)</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="contact" class="container reveal">
+      <span class="section-index">04 — INITIALIZE PROTOCOL</span>
+      <div class="section-header">
+        <h2>Establish Connection</h2>
+        <p>Open channel for academic research, data operations, or philosophical debate.</p>
+      </div>
+
+      <div style="max-width: 600px; margin: 0 auto;">
+        <form id="sysContactForm" onsubmit="event.preventDefault(); alert('System Log: Message architecture compiled. Awaiting backend API integration.');">
+          <label for="name">Identifier (Name)</label>
+          <input type="text" id="name" required placeholder="Dr. John von Neumann">
+          
+          <label for="email">Return Protocol (Email)</label>
+          <input type="email" id="email" required placeholder="john@institute.edu">
+          
+          <label for="message">Data Payload (Message)</label>
+          <textarea id="message" rows="5" required placeholder="Regarding the systemic analysis of..."></textarea>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">Execute Transmission</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div class="social-links">
+        <a href="https://www.linkedin.com/company/datavery/" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        <a href="https://github.com/amanovshamsaddin" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="mailto:amanovshams@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+        </a>
+      </div>
+      
+      <p style="margin-bottom: 0; color: var(--text-muted);">Architected by <strong>Shamsaddin Amanov</strong>. Hosted on GitHub Pages.</p>
+      
+      <div class="version-tag">
+        datavery.app v1.0.0 | Environment: Production | Build: 2026.03.02
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      // --- A. THEME ARCHITECTURE (PERSISTENT) ---
+      const toggleBtn = document.getElementById('theme-toggle');
+      const htmlEl = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      
+      const moonPath = "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z";
+      const sunPath = "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z";
+
+      // Load System Preference or Storage
+      const savedTheme = localStorage.getItem('datavery-theme') || 'dark'; // Defaulting to dark for tech aesthetic
+      htmlEl.setAttribute('data-theme', savedTheme);
+      themeIcon.innerHTML = savedTheme === 'dark' 
+        ? `<path d="${sunPath}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>`
+        : `<path d="${moonPath}"></path>`;
+
+      toggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        htmlEl.setAttribute('data-theme', newTheme);
+        localStorage.setItem('datavery-theme', newTheme);
+        
+        themeIcon.innerHTML = newTheme === 'dark' 
+          ? `<path d="${sunPath}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>`
+          : `<path d="${moonPath}"></path>`;
+      });
+
+      // --- B. INTERSECTION OBSERVER (SCROLL PHYSICS) ---
+      const revealElements = document.querySelectorAll('.reveal');
+      const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+
+      const revealOnScroll = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, revealOptions);
+
+      revealElements.forEach(el => revealOnScroll.observe(el));
+    });
+  </script>
+</body>
+</html>
